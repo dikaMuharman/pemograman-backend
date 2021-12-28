@@ -1,23 +1,22 @@
-// TODO 3: Import data students dari folder data/students.js
-const studenst = require('../data/Students');
-// TODO 4: Membuat class StudentsController
+const Student = require('../models/Students');
 class StudentsController {
   index(req, res) {
-    // TODO 5: Tampilkan data students
-    const data = {
-      message: 'Menampilkan semua students',
-      data: studenst,
-    };
+    Student.all((students) => {
+      const data = {
+        message: 'Menampilkan semua students',
+        data: students,
+      };
 
-    res.json(data);
+      res.json(data);
+    });
   }
-  store(req, res) {
-    // TODO 6: Tambah data students
-    const { nama } = req.body;
+  async store(req, res) {
+    // TODO : refactor to get data from db
+    const result = await Student.create(req.body);
 
     const data = {
-      message: `Menambahkan data student ${nama}`,
-      data: [nama, ...studenst],
+      message: `Menambahkan data student`,
+      data: result,
     };
 
     res.json(data);
@@ -25,7 +24,7 @@ class StudentsController {
   update(req, res) {
     const { id } = req.params;
     const { nama } = req.body;
-    // TODO 7: Update data students
+    // TODO : refactor to get data from db
     studenst[id] = nama;
     const data = {
       message: `Mengedit student id ${id}, nama ${nama}`,
@@ -36,7 +35,7 @@ class StudentsController {
   }
   destroy(req, res) {
     const { id } = req.params;
-    // TODO 8: Hapus data students
+    // TODO : refactor to get data from db
     studenst.splice(id, 1);
     const data = {
       message: `Menghapus student id ${id}`,
