@@ -25,10 +25,36 @@ class Student {
       });
     });
 
+    const students = this.find(id);
+    return students;
+  }
+
+  static find(id) {
     return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM students WHERE id = ?';
-      db.query(query, id, (err, results) => {
-        if (err) reject(err);
+      const sql = 'SELECT * FROM students WHERE id = ?';
+      db.query(sql, id, (err, results) => {
+        const [student] = results;
+        resolve(student);
+      });
+    });
+  }
+
+  static async update(id, data) {
+    await new Promise((resolve, reject) => {
+      const sql = 'UPDATE students SET ? WHERE id = ?';
+      db.query(sql, [data, id], (err, results) => {
+        resolve(results);
+      });
+    });
+
+    const students = await this.find(id);
+    return students;
+  }
+
+  static delete(id) {
+    return new Promise((resolve, reject) => {
+      const sql = 'DELETE FROM students WHERE id = ?';
+      db.query(sql, id, (err, results) => {
         resolve(results);
       });
     });
